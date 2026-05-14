@@ -1,14 +1,9 @@
-[workspace]
-resolver = "2"
-
-# Empty for CI safety (prevents missing-crate failures)
-members = []
-
-[workspace.package]
-version = "0.3.0"
+[package]
+name = "ruview"
+version = "0.1.0"
 edition = "2021"
-authors = ["rUv <ruv@ruv.net>"]
-license = "MIT OR Apache-2.0"
+
+[dependencies]
 
 [profile.dev]
 debug = true
