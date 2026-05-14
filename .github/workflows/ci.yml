@@ -1,9 +1,10 @@
 name: CI
 
 on:
-  workflow_dispatch: 
+  workflow_dispatch:
+
 jobs:
-  test:
+  rust:
     runs-on: ubuntu-latest
 
     services:
@@ -30,18 +31,34 @@ jobs:
           pse_image_tag: "dev-test"
           debug: true
       # ============= InvisiRisk Setup End =============
+
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pytest black flake8
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Build
+        run: cargo build --verbose
+
+      - name: Test
+        run: cargo test --verbose
+
+      - name: Format check
+        run: cargo fmt --all --check
+
+      - name: Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
       # ============= InvisiRisk Cleanup =============
       - name: Cleanup PSE
         if: always()
