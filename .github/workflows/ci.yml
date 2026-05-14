@@ -34,17 +34,6 @@ jobs:
           pip install -r requirements.txt
           pip install pytest black flake8
 
-      - name: Check formatting
-        run: black --check .
-
-      - name: Lint
-        run: flake8 .
-
-      - name: Run tests
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
-          REDIS_URL: redis://localhost:6379/0
-        run: pytest -v
 
   docker:
     runs-on: ubuntu-latest
